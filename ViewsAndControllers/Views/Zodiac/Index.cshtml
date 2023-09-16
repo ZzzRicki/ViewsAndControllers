@@ -1,0 +1,54 @@
+﻿@model ViewsAndControllers.Models.ZodiacModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4>Signo del Zodiaco</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CalculateZodiac" method="POST">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Day" class="control-label">Dia</label>
+                <select asp-for="Day" class="form-control">
+                    @for(int i = 1; i < 32; i++)
+                    {
+                        <option value="@i">@i</option>    
+                    }
+                </select>
+                <span asp-validation-for="Day"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Month" class="control-label">Mes</label>
+                <select asp-for="Month" class="form-control">
+                    @for (int i = 1; i < 13; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+                <span asp-validation-for="Month" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <input type="submit" value="Calcular" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+@if (TempData.ContainsKey("Result") && TempData["Result"] != null)
+{
+    <h4>Su signo zodiacal es: @TempData["Result"]</h4>
+}
+
+<div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

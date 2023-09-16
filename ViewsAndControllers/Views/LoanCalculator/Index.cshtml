@@ -1,0 +1,95 @@
+﻿@using ViewsAndControllers.Enums;
+@model ViewsAndControllers.Models.LoanCalculatorModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4>Calculadora de Prestamo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Calculate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LoanAmount" class="control-label">Cantidad del Prestamo</label>
+                <input asp-for="LoanAmount" class="form-control" />
+                <span asp-validation-for="LoanAmount" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="SelectedLoanType" class="control-label">Tipo de Prestamo</label>
+                <select id="loanType" asp-for="SelectedLoanType" class="form-control">
+                    @{
+                        string[] loanTypeNames = Enum.GetNames(typeof(LoanType));
+                        LoanType[] loanTypeValues = (LoanType[])Enum.GetValues(typeof(LoanType));
+
+                        <option selected disabled>Seleccione un tipo de prestamo</option>
+                        for (int i = 0; i < loanTypeNames.Length; i++)
+                        {
+                            string name = loanTypeNames[i];
+                            LoanType value = loanTypeValues[i];
+                            <option value="@Convert.ToInt32(value)">@name</option>
+                        }
+                    }
+
+                </select>
+                <span asp-validation-for="SelectedLoanType" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="InterestRate" class="control-label">Tasa de Interes (%)</label>
+                <input id="interestRate" readonly asp-for="InterestRate" class="form-control" />
+                <span asp-validation-for="InterestRate" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="LoanTermMonths" class="control-label">Cantidad de Cuotas</label>
+                <select asp-for="LoanTermMonths" class="form-control">
+                    @{
+                        <option selected disabled>Seleccione la cantidad de cuotas</option>
+                        for (int i = 12; i < 121; i += 6)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+
+                </select>
+                <span asp-validation-for="LoanTermMonths" class="text-danger"></span>
+            </div>
+            <br>
+            @if (Model.MonthlyPayment != null && Model.MonthlyPayment != 0)
+            {
+                <div class="form-group">
+                    <label asp-for="MonthlyPayment" class="control-label">Pago Mensual</label>
+                    <input readonly asp-for="MonthlyPayment" value="@Model.MonthlyPayment" class="form-control" />
+                    <span asp-validation-for="MonthlyPayment" class="text-danger"></span>
+                </div>
+            }
+            <br>
+            <div class="form-group">
+                <input type="submit" value="Calcular" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(() => {
+            const loanType = $("#loanType");
+            const interestRate = $("#interestRate");
+
+            loanType.on("change", (e) => {
+                if (e.target.value == 0) interestRate.val("22");
+                if (e.target.value == 1) interestRate.val("12");
+                if (e.target.value == 2) interestRate.val("8");
+            });
+        });
+
+    </script>
+}

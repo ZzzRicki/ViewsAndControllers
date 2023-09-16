@@ -1,0 +1,40 @@
+﻿@model ViewsAndControllers.Models.ConversionModel
+
+@{
+    ViewData["Title"] = "Conversor de Moneda";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="Currency" asp-action="Convert" method="POST">
+    <div class="form-group">
+        <label for="from">De:</label>
+        <select class="form-control" id="from" name="From" asp-for="From" required>
+            <option value="Peso">Peso</option>
+            <option value="Dólar">Dólar</option>
+            <option value="Euro">Euro</option>
+        </select>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="to">A:</label>
+        <select class="form-control" id="to" name="To" asp-for="To" required>
+            <option value="Peso">Peso</option>
+            <option value="Dólar">Dólar</option>
+            <option value="Euro">Euro</option>
+        </select>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="amount">Cantidad:</label>
+        <input type="number" class="form-control" id="amount" name="Amount" asp-for="Amount" required>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Convertir</button>
+</form>
+<br>
+@if (Model.Result != 0 && Model.Result != null)
+{
+    <h4>Resultado:</h4>
+    <p>@Model.Amount @Model.From = @Model.Result @Model.To</p>
+}
